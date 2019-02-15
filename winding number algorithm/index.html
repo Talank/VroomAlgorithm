@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>In Out Check</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="drawMouse.js"></script> -->
+</head>
+<body>
+
+	<p>
+		x: <span id="x-value"></span>
+	</p>
+	<p>
+		y: <span id="y-value"></span>
+	</p>
+	<p>
+		In or Out: <span id="in-or-out"></span>
+	</p>
+
+	<canvas height="250" width="250" id="myCanvas" class="displayBox"></canvas>
+
+	<!-- <button onclick="javascript:clearArea();return false;">Clear Area</button>
+
+	
+	<canvas height="900" width="900" id="outerCanvas" class="displayBoxOuter"></canvas>
+ -->
+	<script type="text/javascript">
+
+		
+
+		var c = document.getElementById("myCanvas");
+		var ctx = c.getContext("2d");
+		ctx.fillStyle = "rgb(150,150,150)";
+		ctx.fillRect(20, 20, 150, 100);
+
+		//variable to store current position
+		var xValue,yValue;
+
+		var topLeftX = 620;
+		var topLeftY = 263;
+
+		var topRightX = 831;
+		var topRightY = 263;
+
+		var bottomLeftX = 620;
+		var bottomLeftY = 403;
+
+		var bottomRightX = 831;
+		var bottomRightY = 403;
+
+		window.addEventListener('mousemove', function(e){
+			document.getElementById('x-value').textContent = e.x;
+			document.getElementById('y-value').textContent = e.y;
+
+			xValue= e.x;
+			yValue= e.y;
+			
+			var point =[ e.x , e.y];
+			var vertices = [
+							[topLeftX, topLeftY],
+							[topRightX, topRightY],
+							[bottomRightX, bottomRightY],
+							[bottomLeftX, bottomLeftY]
+							];
+
+			if (getWindingNumber(point,vertices) > 0) {
+				document.getElementById('in-or-out').textContent = "IN";
+			}
+
+			else{
+				document.getElementById('in-or-out').textContent = "OUT";	
+			}
+
+		});
+
+
+		//Check if the current point is on the left of the given line, because we are taking the direction of the ray from left to right.
+		function isLeft(P0, P1, P2)
+		{
+			//(x2-x1)*(y-y2)-(x-x1)*(x2-x1) if it is -ve or not
+		    var res = ( (P1[0] - P0[0]) * (P2[1] - P0[1])
+		            - (P2[0] -  P0[0]) * (P1[1] - P0[1]) );
+		    return res;
+		}
+
+		//Calculate the winding number from the given vertices and point
+    	//if the winding number is 0, then the point is outside otherwise the point is inside
+
+    	function getWindingNumber(point, vs){
+    		
+		    var x = parseFloat(point[0]), y = parseFloat(point[1]);
+
+		    var wn = 0;
+
+		    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+		      var xi = parseFloat(vs[i][0]), yi = parseFloat(vs[i][1]);
+		      var xj = parseFloat(vs[j][0]), yj = parseFloat(vs[j][1]);
+
+		      if (yj <= y) {//the vertices "may" be in up direction
+		        if (yi > y) {//the vertices is in up direction for sure
+		          if (isLeft([xj, yj], [xi, yi], [x,y]) > 0) {//our ray passes from left to right, so we have a valid intersection
+		            wn++;//increment the winding number
+		          }
+		        }
+		      } else {//the vertices "may" be in down direction.
+		        if (yi <= y) {//The vertices are in down direction for sure
+		          if (isLeft([xj, yj], [xi, yi], [x, y]) < 0) {//we have a valid intersection
+		            wn--;//decrement the winding number
+		          }
+		        }
+		      }
+		    }
+		    
+		    return wn;
+
+    	}
+
+
+	</script>
+
+
+
+</body>
+</html>

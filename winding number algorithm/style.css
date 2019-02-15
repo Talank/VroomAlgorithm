@@ -1,0 +1,16 @@
+.displayBox{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 350px;
+	padding: 80px 20px 20px 20px;
+}
+
+.displayBoxOuter{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 80px 20px 20px 20px;
+}
